@@ -16,6 +16,8 @@ class Sippedd_Untappd {
 		add_shortcode( 'show_checkins', array( $this, 'sipped_checkins' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_dashicons' ) );
 		include_once( trailingslashit( plugin_dir_path( __FILE__ ) ) . 'class-sippedd-untappd.php' );
+		include_once( trailingslashit( plugin_dir_path( __FILE__ ) ) . 'class-sippedd-untappd-widget.php' );
+		add_action( 'widgets_init', array( $this, 'register_widget' ) );
 	}
 
 	/**
@@ -144,6 +146,10 @@ class Sippedd_Untappd {
 		</form>
 		<?php
 
+	}
+
+	public function register_widget() {
+		register_widget( 'Sippedd_Untappd_Widget' );
 	}
 
 	public function sipped_checkins() {

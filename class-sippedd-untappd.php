@@ -31,7 +31,7 @@ class Sippedd_Untapped_API {
 	}
 
 	private function get_count() {
-		$settings = get_option( 'sippedd_settings', true );
+		$settings = get_option( 'sippedd_settings' );
 
 		return isset( $settings['count'] ) ? $settings['count'] : 25;
 	}
