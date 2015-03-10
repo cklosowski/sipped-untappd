@@ -19,15 +19,20 @@ class Sippedd_Untappd_Widget extends WP_Widget {
 		$usernames = explode( ',', $usernames );
 		$api       = new Sippedd_Untapped_API( $api_key, $api_secret );
 		foreach ( $usernames as $username ) {
+			$username     = trim( $username );
 			$checkins     = $api->get_users_checkins( $username );
-			$last_checkin = $checkins[0];
+			$last_checkin = ! empty( $checkins[0] ) ? $checkins[0] : false;
 			?>
 			<p>
-				<h6><?php echo $last_checkin['user']['user_name']; ?></h6>
+				<h6><?php echo $username; ?></h6>
 				<div class="sippedd-latest-wrapper">
 					<div class="sippedd-latest-beer">
-						<img height="100px" width="100px" src="<?php echo $last_checkin['beer']['beer_label']; ?>" /><br />
-						<?php echo $last_checkin['beer']['beer_name']; ?>
+						<?php if ( ! empty( $last_checkin ) ) : ?>
+							<img height="100px" width="100px" src="<?php echo $last_checkin['beer']['beer_label']; ?>" /><br />
+							<?php echo $last_checkin['beer']['beer_name']; ?>
+						<?php else: ?>
+							<em><?php _e( 'No Checkins Found', 'sippedd-untappd' ); ?></em>
+						<?php endif; ?>
 					</div>
 				</div>
 			</p>

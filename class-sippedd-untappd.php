@@ -15,6 +15,7 @@ class Sippedd_Untapped_API {
 	}
 
 	public function get_users_checkins( $username ) {
+		$username    = trim( $username );
 		$method      = '/user/checkins/' . $username;
 		$request_url = $this->get_request_url( $method );
 
