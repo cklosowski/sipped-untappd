@@ -6,6 +6,9 @@
  * Version: 1.0
  */
 
+define( 'SIPPEDD_FILE', plugin_basename( __FILE__ ) );
+define( 'SIPPEDD_URL', plugins_url( '/', SIPPEDD_FILE ) );
+
 class Sippedd_Untappd {
 
 	private static $su_instance;
@@ -17,7 +20,9 @@ class Sippedd_Untappd {
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_dashicons' ) );
 		include_once( trailingslashit( plugin_dir_path( __FILE__ ) ) . 'class-sippedd-untappd.php' );
 		include_once( trailingslashit( plugin_dir_path( __FILE__ ) ) . 'class-sippedd-untappd-widget.php' );
+		include_once( trailingslashit( plugin_dir_path( __FILE__ ) ) . 'metaboxes.php' );
 		add_action( 'widgets_init', array( $this, 'register_widget' ) );
+		add_shortcode( 'untappd-url', array( $this, 'show_beer_url' ) );
 	}
 
 	/**
@@ -193,15 +198,15 @@ class Sippedd_Untappd {
 
 		foreach ( $checkins as $checkin ) {
 			?>
-			<div class="sippedd-checkin-wrapper" style="font-family: 'Noto Sans', sans-serif; width: 48%; display: inline-block; min-height: 125px;">
-				<p class="sippedd-checkin-beer-label" style="float: left; padding-right: 10px;">
-					<img height="100px" width="100px" src="<?php echo $checkin['beer_label']; ?>" />
+			<div class="sippedd-checkin-wrapper">
+				<p class="sippedd-checkin-beer-label">
+					<img src="<?php echo $checkin['beer_label']; ?>" />
 				</p>
 				<p class="sippedd-meta-wrapper">
-					<span class="sippedd-meta" style="width: 100% text-align: left;">
-						<span style="display: block; font-size: 14px;"><?php echo $checkin['username']; ?></span>
-						<span style="display: block; font-size: 12px;"><?php echo $checkin['beer']; ?></span>
-						<span style="display: block; font-size: 10px;"> by <?php echo $checkin['brewery']; ?></span>
+					<span class="sippedd-meta">
+						<span class="sippedd-meta-user"><?php echo $checkin['username']; ?></span>
+						<span class="sippedd-meta-beer"><?php echo $checkin['beer']; ?></span>
+						<span class="sippedd-meta-brewery"> by <?php echo $checkin['brewery']; ?></span>
 						<?php echo $this->generate_stars( $checkin['rating'] ); ?>
 					</span>
 				</p>
@@ -210,8 +215,37 @@ class Sippedd_Untappd {
 		}
 	}
 
+	public function show_beer_url( $atts ) {
+		if ( ! is_single() && ! is_page() ) {
+			return;
+		}
+
+		global $post;
+
+		$attributes = shortcode_atts( array(
+			'post_id' => $post->ID
+		), $atts );
+
+		$url     = get_post_meta( $attributes['post_id'], '_untappd_beer_url', true );
+
+		if ( empty( $url ) ) {
+			return;
+		}
+
+		$output  = '<p class="sippedd-beer-link-wrapper">';
+		$output .= '<a class="sippedd-beer-link" href="' . $url . '">';
+		$output .= apply_filters( 'sippedd_view_beer_text', __( 'View This Beer on Untappd', 'sippedd' ) );
+		$output .= '</a>';
+		$output .= '</p>';
+
+		echo $output;
+	}
+
 	public function load_dashicons() {
 		wp_enqueue_style( 'dashicons' );
+
+		wp_register_style( 'sippedd_styles', SIPPEDD_URL . 'assets/css/style.css', false );
+		wp_enqueue_style( 'sippedd_styles' );
 	}
 
 	public function generate_stars( $number ) {

@@ -1,0 +1,53 @@
+.sippedd-checkin-wrapper {
+	font-family: 'Noto Sans', sans-serif;
+	width: 48%;
+	display: inline-block;
+	min-height: 125px;
+}
+
+.sippedd-checkin-beer-label {
+	float: left;
+	padding-right: 10px;
+}
+
+.sippedd-checkin-beer-label img {
+	width: 100px;
+	height: 100px;
+}
+
+.sippedd-meta {
+	width: 100%
+	text-align: left;
+}
+
+.sippedd-meta-user, .sippedd-meta-beer, .sippedd-meta-brewery {
+	display: block;
+}
+
+.sippedd-meta-user {
+	font-size: 14px;
+}
+
+.sippedd-meta-beer {
+	font-size: 12px;
+}
+
+.sippedd-meta-brewery {
+	font-size: 10px;
+}
+
+.sippedd-beer-link-wrapper {
+	text-align: center;
+	margin: 5px 0;
+}
+
+.sippedd-beer-link {
+	background-color: #ffcc00;
+	color: #333 !important;
+	padding: 5px 20px;
+	margin: 0 auto;
+	font-weight: 600;
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+}
